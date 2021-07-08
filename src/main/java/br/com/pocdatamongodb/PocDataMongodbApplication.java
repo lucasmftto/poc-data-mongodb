@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.core.JmsTemplate;
 
 @SpringBootApplication
 public class PocDataMongodbApplication implements CommandLineRunner {
@@ -13,13 +15,28 @@ public class PocDataMongodbApplication implements CommandLineRunner {
 	@Autowired
 	private CustomerRepository repository;
 
+	@Autowired
+	private JmsTemplate jmsTemplate;
+
+	@Autowired
+	private JmsTemplate jmsTemplateTopic;
+
+
 	public static void main(String[] args) {
 
 		SpringApplication.run(PocDataMongodbApplication.class, args);
 	}
 
+	@JmsListener(destination = "queue.sample")
+	public void onReceiverQueue(String str) {
+		System.out.println( str );
+	}
+
 	@Override
 	public void run(String... args) throws Exception {
+
+		jmsTemplate.convertAndSend("queue.sample", "{user: 'wolmir', usando: 'fila'}");
+		jmsTemplateTopic.convertAndSend("topic.sample", "{user: 'wolmir', usando: 'tópico'}");
 
 		repository.deleteAll();
 
