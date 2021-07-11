@@ -27,9 +27,13 @@ public class JmsConfig {
     @Bean
     public ActiveMQConnectionFactory connectionFactory() {
         if ( "".equals(user) ) {
-            return new ActiveMQConnectionFactory(brokerUrl);
+            ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(brokerUrl);
+            factory.setTrustAllPackages(true);
+            return factory;
         }
-        return new ActiveMQConnectionFactory(user, password, brokerUrl);
+        ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(user, password, brokerUrl);
+        factory.setTrustAllPackages(true);
+        return factory;
     }
 
     @Bean

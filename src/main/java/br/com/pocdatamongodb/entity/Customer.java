@@ -1,7 +1,12 @@
 package br.com.pocdatamongodb.entity;
+
 import org.springframework.data.annotation.Id;
 
-public class Customer {
+import java.io.Serializable;
+
+public class Customer implements Serializable {
+
+    private static final long serialVersionUID = -295422703255886286L;
 
     @Id
     public String id;
